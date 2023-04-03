@@ -20,16 +20,20 @@ class CheckoutGenericTestCases(unittest.TestCase):
         self.inventory.add_to_inventory(prod.Product(name='E',unit_price='10'))
         
         #special_buys
-        offers = Offers()
+        self.offers = Offers()
         MultiByOffers(offer_name='multibyA',product_name='A',required_quantity=3, offer_price=130)
         MultiByOffers(offer_name='multibyB',product_name='B',required_quantity=2, offer_price=45)
         MixnMatch(offer_name='mix_match_DE',products=['D','E'],required_quantity_of_each=1, offer_price=20)
-        self.current_offers = offers.current_offers
-        
-        #checkout object
-        self.checkout = calc.Checkout(self.inventory, self.current_offers)
+        self.current_offers = self.offers.current_offers
+
         return super().setUp()
 
+    def tearDown(self):
+        for i in self.inventory.inventory:
+            del i
+        del self.inventory
+        del self.current_offers
+        del self.offers
 
     def test_valid_item(self):
         checkout = calc.Checkout(self.inventory, self.current_offers)
@@ -37,8 +41,9 @@ class CheckoutGenericTestCases(unittest.TestCase):
         self.assertEqual(checkout.items, {'A':1})
         
     def test_invalid_item(self):
+        checkout = calc.Checkout(self.inventory, self.current_offers)
         with self.assertRaises(ValueError):
-            self.checkout.scan("K")
+            checkout.scan("K")
 
     def test_empty_cart(self):
         checkout = calc.Checkout(self.inventory, self.current_offers)
