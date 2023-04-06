@@ -6,17 +6,24 @@ class Checkout:
     This class represents the mechanism to caculate the total price payable by
     a customer for their checkout cart
     
-    params: pricing_rule: Dict ( A Dictionary of a product type with unit and special pricing if any)
-    
-    returns: A new SupermarketCheckout Object
+    params: Takes and inventory of Products and any special offers
+
     '''
-    def __init__(self, inventory, offers):
+    
+    def __init__(self, inventory: list, offers: list) -> None:
+        '''
+        Init Method to create a new Checkout Object.
+        
+        params:
+                inventory: list
+                offers: list
+        '''           
         self.inventory = inventory
         self.offers = offers
         self.items = {}
         self.total = 0
         
-    def scan(self, item: str):
+    def scan(self, item: str) -> None:
         '''
         Method to add items in the cart
         
@@ -31,7 +38,7 @@ class Checkout:
         else:
             self.items[item] = 1
             
-    def multiby_offer_calc(self, item: str, offer: Offers, price: float):
+    def multiby_offer_calc(self, item: str, offer: Offers, price: float) -> None:
         '''
         Method to calculate total with adding any multiby offers
         
@@ -49,7 +56,7 @@ class Checkout:
                 else:
                     del self.items[item]
 
-    def mix_n_match_calc(self, item: str, offer: Offers):
+    def mix_n_match_calc(self, item: str, offer: Offers) -> None:
         '''
         Method to calculate total with adding any mix_n_match offers
         
@@ -67,7 +74,7 @@ class Checkout:
                 else:
                     del self.items[x]
         
-    def total_price(self) -> int:
+    def total_price(self) -> float:
         '''
         Method to check the checkout basket and calculate the total payable price
         
