@@ -6,7 +6,6 @@ class Offers:
     def apply_offer(self):
         raise NotImplementedError()
 
-
 class MultiByOffers(Offers):
 
     def __init__(self, offer_name, product_name, required_quantity, offer_price):      
@@ -22,7 +21,6 @@ class MultiByOffers(Offers):
             if offer['product_name'] == product_name and offer['required_quantity'] == required_quantity:
                 return offer['offer_price']
 
-
 class MixnMatch(Offers):
     def __init__(self, offer_name, products, required_quantity_of_each, offer_price):
         self.offer_name = offer_name
@@ -30,8 +28,6 @@ class MixnMatch(Offers):
         self.required_quantity_of_each = required_quantity_of_each
         self.offer_price = offer_price
         self.current_offers.append(self)
-
-
 
     def apply_offer(self, offer_name, products, required_quantity_of_each):
         if not isinstance(products, list):

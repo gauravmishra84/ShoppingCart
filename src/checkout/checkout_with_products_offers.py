@@ -1,5 +1,5 @@
 from typing import Dict
-from pricing.special_offers import MultiByOffers, MixnMatch
+from pricing.special_offers import MultiByOffers, MixnMatch, Offers
 
 class Checkout:
     '''
@@ -14,6 +14,7 @@ class Checkout:
         self.inventory = inventory
         self.offers = offers
         self.items = {}
+        self.total = 0
         
     def scan(self, item: str):
         '''
@@ -29,11 +30,44 @@ class Checkout:
             self.items[item] += 1
         else:
             self.items[item] = 1
-
+            
+    def multiby_offer_calc(self, item: str, offer: Offers, price: float):
+        '''
+        Method to calculate total with adding any multiby offers
         
+        params: item: string
+                offer: Offers
+                price: float
+        '''
+        if item == offer.product_name and self.items[item] >= offer.required_quantity:
+            quotient, remainder = divmod(self.items[item], offer.required_quantity)
+            self.total -= offer.required_quantity*price
+            self.total += quotient* offer.offer_price
+            for _ in range(offer.required_quantity):
+                if self.items[item] > 1:
+                    self.items[item] -= 1  
+                else:
+                    del self.items[item]
 
+    def mix_n_match_calc(self, item: str, offer: Offers):
+        '''
+        Method to calculate total with adding any mix_n_match offers
         
-    def total(self) -> int:
+        params: item: string
+                offer: Offers
+        '''
+        mix_match_items = all(i in self.items for i in offer.products)
+        if mix_match_items:
+            self.total += offer.offer_price
+        for x in offer.products:                                
+            if item == x:
+                self.total -= self.checkout[x]
+                if self.items[x] > 1:
+                    self.items[x] -= 1
+                else:
+                    del self.items[x]
+        
+    def total_price(self) -> int:
         '''
         Method to check the checkout basket and calculate the total payable price
         
@@ -42,35 +76,18 @@ class Checkout:
         # Check if the shopping cart isn't empty
         if not self.items:
             raise KeyError(f" Empty Cart ")
-        
-        total = 0
+
         cart = list(self.items.keys())
         for item in cart:
             price = self.checkout[item]
-            total += self.items[item] * price   
+            self.total += self.items[item] * price   
             if self.offers:
                 for offer in self.offers:                
                     if isinstance(offer, MultiByOffers):
-                        if item == offer.product_name and self.items[item] >= offer.required_quantity:
-                            quotient, remainder = divmod(self.items[item], offer.required_quantity)
-                            total -= offer.required_quantity*price
-                            total += quotient* offer.offer_price
-                            for _ in range(offer.required_quantity):
-                                if self.items[item] > 1:
-                                    self.items[item] -= 1  
-                                else:
-                                    del self.items[item]
+                        self.multiby_offer_calc(item, offer, price)
                     if isinstance(offer, MixnMatch):
-                        mix_match_items = all(i in self.items for i in offer.products)
-                        if mix_match_items:
-                            total += offer.offer_price
-                        for x in offer.products:                                
-                            if item == x:
-                                total -= self.checkout[x]
-                                if self.items[x] > 1:
-                                    self.items[x] -= 1
-                                else:
-                                    del self.items[x]
+                        self.mix_n_match_calc(item, offer)
 
-        return total
+        return self.total
+    
     

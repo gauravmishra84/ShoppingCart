@@ -48,7 +48,7 @@ class CheckoutGenericTestCases(unittest.TestCase):
     def test_empty_cart(self):
         checkout = calc.Checkout(self.inventory, self.current_offers)
         with self.assertRaises(KeyError):
-            checkout.total()
+            checkout.total_price()
             
     def test_calculate_total_without_special_price(self):
         offers = []
@@ -57,7 +57,7 @@ class CheckoutGenericTestCases(unittest.TestCase):
         checkout.scan("B")
         checkout.scan("C")
         checkout.scan("D")
-        self.assertEqual(checkout.total(), 115)
+        self.assertEqual(checkout.total_price(), 115)
         
     def test_calculate_total_with_special_price(self):
         checkout = calc.Checkout(self.inventory, self.current_offers)
@@ -66,7 +66,7 @@ class CheckoutGenericTestCases(unittest.TestCase):
         checkout.scan("B")
         checkout.scan("A")
         checkout.scan("B")
-        self.assertEqual(checkout.total(), 175)
+        self.assertEqual(checkout.total_price(), 175)
         
     def test_calculate_total_with_mix_match(self):
         offers = [MixnMatch(offer_name='mix_match_DE',products=['D','E'],required_quantity_of_each=1, offer_price=20)]
@@ -74,7 +74,7 @@ class CheckoutGenericTestCases(unittest.TestCase):
         checkout.scan("E")
         checkout.scan("D")
         checkout.scan("D")
-        self.assertEqual(checkout.total(), 35)        
+        self.assertEqual(checkout.total_price(), 35)        
         
 
 if __name__ == "__main__":
