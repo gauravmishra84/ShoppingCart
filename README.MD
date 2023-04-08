@@ -1,6 +1,6 @@
 ## Problem Statement
 
-The is the implementation for the given problem statement of creating a checkout function for a Supermarket and calculate total price for a cart considering any special offers.
+This is the implementation for the given problem statement of creating a checkout function for a Supermarket and calculate total price for a cart considering any special offers.
 
 ### Assumptions
 
