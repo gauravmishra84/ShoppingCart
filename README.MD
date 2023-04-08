@@ -51,7 +51,7 @@ current_offers = offers.current_offers
 
 `checkout.scan("D")`
 
-`print(checkout.total())`
+`print(checkout.total_price())`
 
  This should result in 115.
 
