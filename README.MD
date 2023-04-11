@@ -16,13 +16,15 @@ The implementation is structured as a module under `src` and called `checkout_wi
 
 To run the code directly in Terminal, we would need do below steps.
 
-```import sys
+```
+import sys
 sys.path.append('./src')
 
 from checkout import checkout_with_products_offers as calc
 from data import products as prod
 from inventory.inventory import Inventory
-from pricing.special_offers  import  Offers, MultiByOffers, MixnMatch```
+from pricing.special_offers  import  Offers, MultiByOffers, MixnMatch
+```
 
 And now once the module is imported, we could potentially create the object and a dummy pricing for some items:
 ```
